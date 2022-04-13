@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzjwGvJs7EXM7CqrEGt6J6Yts2sChRQZSP4A&usqp=CAU');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-size: 100% 100%;
+  }
+  </style>
+
+    <h3
+
+    style="text-align: center; margin-top:1% ; color: white;">ARRANGE SHOWS </h3>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"></div>
+            <form action="/showsDashboard" method="post">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>Movie Name </td>
+                        <td><input name="mname" type="text" class="form-control"></td>
+                    </tr>
+
+
+                    <tr>
+                        <td>Hall Id </td>
+                        <td><input name="hid" type="number" class="form-control"></td>
+                    </tr>
+                        <td>Show Timing </td>
+                        <td><input name="shtime" type="number" class="form-control"></td>
+                    <tr>
+                        <td>Show Date </td>
+                        <td><input name="shdate" type="date" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Price Id </td>
+                        <td><input name="prid" type="number" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>City </td>
+                        <td><input name="ciname" type="text" class="form-control"></td>
+                    <tr>
+                        <td></td>
+                        <td><button class="btn btn-success" type="submit">ADD SHOW</button></td>
+                    </tr>
+
+                </table>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

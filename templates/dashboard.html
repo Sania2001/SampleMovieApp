@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzjwGvJs7EXM7CqrEGt6J6Yts2sChRQZSP4A&usqp=CAU');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-size: 100% 100%;
+  }
+  </style>
+
+    <h3
+
+    style="text-align: center; margin-top:1% ; color: white;">ADDING MOVIE </h3>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"></div>
+            <form action="/dashboard" method="post">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>Movie Name </td>
+                        <td><input name="moviename" type="text" class="form-control"></td>
+                    </tr>
+
+
+                    <tr>
+                        <td>Movie Language </td>
+                        <td><input name="mlanguage" type="text" class="form-control"></td>
+                    </tr>
+                        <td>Movie Animation </td>
+                        <td><input name="manimation" type="text" class="form-control"></td>
+                    <tr>
+                        <td>Show Start </td>
+                        <td><input name="showstart" type="date" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Show End </td>
+                        <td><input name="showend" type="date" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>City </td>
+                        <td><input name="cityname" type="text" class="form-control"></td>
+                    <tr>
+                        <td></td>
+                        <td><button class="btn btn-success" type="submit">SUBMIT</button></td>
+                    </tr>
+
+                </table>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
