@@ -53,6 +53,48 @@ else:
                             CityName TEXT); ''')
     print("Table has created")
 
+halls_table = conn.execute("SELECT name from sqlite_master WHERE type='table' AND name='HALL'").fetchall()
+Book_tickets_table = conn.execute("SELECT name from sqlite_master WHERE type='table' AND name='BOOKED_TICKETS'").fetchall()
+
+if halls_table:
+    print("Table Already Exists ! ")
+
+else:
+    conn.execute(''' CREATE TABLE HALL(
+                            HALLID INTEGER PRIMARY KEY AUTOINCREMENT,
+                            SHOWID Integer,
+                            Class TEXT,
+                            No_of_seats INTEGER); ''')
+    print("Table has created")
+
+
+if Book_tickets_table:
+    print("Table Already Exists ! ")
+
+else:
+    conn.execute(''' CREATE TABLE BOOKED_TICKETS(
+                            TICKET_NO INTEGER PRIMARY KEY AUTOINCREMENT,
+                            SHOWID INTEGER,
+                            SEAT_NO INTEGER); ''')
+    print("Table has created")
+
+user_table = conn.execute("SELECT name from sqlite_master WHERE type='table' AND name='users'").fetchall()
+
+if user_table:
+    print("Table Already Exists ! ")
+else:
+    conn.execute(''' CREATE TABLE users(
+                            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                            mname TEXT, 
+                            maddress TEXT, 
+                            mphone INTEGER,
+                            memail TEXT, 
+                            musername TEXT, 
+                            mpassword TEXT); ''')
+    print("User Table has created")
+
+############################################################################################################################################
+
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -209,7 +251,7 @@ def dashboard():
             cursor.execute(insert_query, data)
             conn.commit()
             print("Movie added successfully")
-            return redirect("/viewall")
+            return redirect("/viewallmovies")
 
         except Exception as e:
             print(e)
@@ -223,6 +265,8 @@ def viewall():
     cur.execute("SELECT * FROM PICTURE")
     res = cur.fetchall()
     return render_template("viewallmovies.html", cinemas=res)
+
+
 
 @app.route("/showsDashboard", methods=["GET", "POST"])
 def arrangeShows():
@@ -262,6 +306,189 @@ def viewallshows():
     cur.execute("SELECT * FROM SHOWS")
     res = cur.fetchall()
     return render_template("viewallshows.html", cinemass=res)
+
+
+@app.route("/showsDashboard", methods=["GET", "POST"])
+def arrangeShow():
+    if request.method == "POST":
+        getMOvieId = request.form["mid"]
+        getMOvieName = request.form["mname"]
+        getHallId = request.form["hid"]
+        getTime = request.form["shtime"]
+        getDate = request.form["shdate"]
+        getPriceId = request.form["prid"]
+        getCItyName = request.form["ciname"]
+
+        print(getMOvieName)
+        print(getHallId)
+        print(getTime)
+        print(getDate)
+        print(getPriceId)
+        print(getCItyName)
+
+        try:
+            data = (getMOvieId, getMOvieName, getHallId, getTime, getDate, getPriceId, getCItyName)
+            insert_query = '''INSERT INTO SHOW(MOVIEID, MOVIENAME, HALLID, TIME, DATE, PRICEID, CityName) 
+                                    VALUES (?,?,?,?,?,?,?)'''
+
+            cursor.execute(insert_query, data)
+            conn.commit()
+            print("Show added successfully")
+            return redirect("/viewallshows")
+
+        except Exception as e:
+            print(e)
+    return render_template("showsDashboard.html")
+
+
+@app.route("/viewallshows")
+def viewAllShows():
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM SHOW")
+    res = cur.fetchall()
+    return render_template("viewallshows.html", cinemass=res)
+
+###################################################################################################################################################
+
+@app.route("/viewallHalls")
+def viewAllHalls():
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM HALL")
+    res = cur.fetchall()
+    return render_template("viewallhalls.html", cinemas=res)
+
+
+@app.route("/showsHalls", methods=["GET", "POST"])
+def arrangeHalls():
+    if request.method == "POST":
+        getMShowId = request.form["sid"]
+        getClass = request.form["class"]
+        getNoOfSeats= request.form["nos"]
+
+
+        print(getMShowId)
+        print(getClass)
+        print(getNoOfSeats)
+
+
+        try:
+            data = (getMShowId, getClass, getNoOfSeats)
+            insert_query = '''INSERT INTO HALL(SHOWID, Class, No_of_seats) 
+                                    VALUES (?,?,?)'''
+
+            cursor.execute(insert_query, data)
+            conn.commit()
+            print("Hall added successfully")
+            return redirect("/viewallHalls")
+
+        except Exception as e:
+            print(e)
+    return render_template("showsHalls.html")
+
+
+@app.route("/getAvailableSeats", methods=["GET"])
+def seatingManagement():
+    gethallID = request.form['showID']
+    print(gethallID)
+    getticketID = request.form['ticketID']
+
+
+    res = ("SELECT No_of_seats FROM halls WHERE HALLID = '" + gethallID + "'")
+
+    totalGold = 0
+    totalStandard = 0
+
+    for i in res:
+        if i[0] == 'gold':
+            totalGold = i[1]
+        if i[0] == 'standard':
+            totalStandard = i[1]
+
+    res = ("SELECT SEAT_NO FROM BOOKED_TICKETS WHERE TICKET_NO = '" + getticketID + "' " )
+    goldSeats = []
+    standardSeats = []
+
+    for i in range(1, totalGold + 1):
+        goldSeats.append([i, ''])
+
+    for i in range(1, totalStandard + 1):
+        standardSeats.append([i, ''])
+
+    for i in res:
+        if i[0] > 1000:
+            goldSeats[i[0] % 1000 - 1][1] = 'disabled'
+        else:
+            standardSeats[i[0] - 1][1] = 'disabled'
+
+    return render_template('seating.html', goldSeats=goldSeats, standardSeats=standardSeats)
+
+################################################################################################################################################
+
+@app.route("/userdashboard", methods=['GET', 'POST'])
+def userdashboard():
+    return render_template("userdashboard.html")
+
+
+@app.route("/userEntry", methods=["GET", "POST"])
+def userEntry():
+    if request.method == "POST":
+        getName = request.form["mname"]
+        getAddress = request.form["maddress"]
+        getPhone = request.form["mphone"]
+        getEmail = request.form["memail"]
+        getUsername = request.form["musername"]
+        getPassword = request.form["mpassword"]
+
+        print(getName)
+        print(getAddress)
+        print(getPhone)
+        print(getEmail)
+        print(getUsername)
+        print(getPassword)
+
+        try:
+            conn.execute("INSERT INTO users(mname, maddress, mphone, memail, musername, mpassword )VALUES('"+getName+"','"+getAddress+"','"+getPhone+"','"+getEmail+"','"+getUsername+"','"+getPassword+"')")
+            print("Successfully inserted")
+            conn.commit()
+            return redirect("/userlogin")
+
+        except Exception as e:
+            print(e)
+    return render_template("userEntry.html")
+
+
+@app.route("/userlogin", methods=['GET', 'POST'])
+def userlogin():
+    if request.method == "POST":
+        getUsername = request.form["musername"]
+        getPassword = request.form["mpassword"]
+        print(getUsername)
+        print(getPassword)
+        cur2 = conn.cursor()
+        cur2.execute( "SELECT * FROM users WHERE musername = '" + getUsername + "' AND mpassword = '" + getPassword + "'")
+        res2 = cur2.fetchall()
+        if len(res2) > 0:
+            for i in res2:
+                getName = i[1]
+                getid = i[0]
+
+            session["name"] = getName
+            session["id"] = getid
+
+            return redirect("/userdashboard")
+    return render_template("userlogin.html")
+
+
+@app.route("/moviesearch", methods=["GET", "POST"])
+def moviesearch():
+    if request.method == "POST":
+        getName = request.form["MOVIENAME"]
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM PICTURE WHERE MOVIENAME = '"+getName+"' ")
+        result = cursor.fetchall()
+        return render_template("moviesearch.html", movies=result)
+    return render_template("msearch.html")
+
 
 if(__name__) == "__main__":
     app.run(debug=True)
