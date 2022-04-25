@@ -3,48 +3,130 @@
     <!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <head>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+background-image: url('https://wallpaperaccess.com/full/2416004.jpg');
+background-repeat: no-repeat;
+background-attachment: fixed;  
+background-size: cover;
+}
+  </style>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <style>
-        body {
-    background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dGhlYXRlcnxlbnwwfHwwfHw%3D&w=1000&q=80');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-size: 100% 100%;
-  }
-      </style>
+    
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<body class="align">
+    
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/"> Online Movie Ticket Booking</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <a class="navbar-brand" href="#">CineMax</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/login">ADMIN</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/userlogin">USER LOGIN</a>
-              </li>
-                <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/userEntry">NEW USER</a>
+                <a class="nav-link " href="/userlogin">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/login-owner">OWNER</a>
+                <a class="nav-link " href="/userEntry">Page</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link " href="/userlogin">SignIn</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link " href="/userEntry">SignUp</a>
+              </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  More Options
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="/login">Admin</a></li>
+                  <li><a class="dropdown-item" href="/login-owner">Owner</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#"></a></li>
+                </ul>
+              </li>
+              
             </ul>
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search movies" aria-label="Search">
+              <button class="btn btn-outline-danger" type="submit">Search</button>
+            </form>
           </div>
         </div>
       </nav>
+      <div class="grid">
 
-      <h1 style="text-align: center; color:rgb(244, 244, 234); font-family: Georgia, 'Times New Roman', Times, serif;">Welcome to Portal</h1>
-    </div>
+
+    
+      </div>
+    
+      <svg xmlns="http://www.w3.org/2000/svg" class="icons">
+        <symbol id="icon-arrow-right" viewBox="0 0 1792 1792">
+          <path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293H245q-52 0-84.5-37.5T128 1024V896q0-53 32.5-90.5T245 768h704L656 474q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z" />
+        </symbol>
+        <symbol id="icon-lock" viewBox="0 0 1792 1792">
+          <path d="M640 768h512V576q0-106-75-181t-181-75-181 75-75 181v192zm832 96v576q0 40-28 68t-68 28H416q-40 0-68-28t-28-68V864q0-40 28-68t68-28h32V576q0-184 132-316t316-132 316 132 132 316v192h32q40 0 68 28t28 68z" />
+        </symbol>
+        <symbol id="icon-user" viewBox="0 0 1792 1792">
+          <path d="M1600 1405q0 120-73 189.5t-194 69.5H459q-121 0-194-69.5T192 1405q0-53 3.5-103.5t14-109T236 1084t43-97.5 62-81 85.5-53.5T538 832q9 0 42 21.5t74.5 48 108 48T896 971t133.5-21.5 108-48 74.5-48 42-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-320-893q0 159-112.5 271.5T896 896 624.5 783.5 512 512t112.5-271.5T896 128t271.5 112.5T1280 512z" />
+        </symbol>
+      </svg>
+    
+    
+      </div>
+    
+      <svg xmlns="http://www.w3.org/2000/svg" class="icons">
+        <symbol id="icon-arrow-right" viewBox="0 0 1792 1792">
+          <path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293H245q-52 0-84.5-37.5T128 1024V896q0-53 32.5-90.5T245 768h704L656 474q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z" />
+        </symbol>
+        <symbol id="icon-lock" viewBox="0 0 1792 1792">
+          <path d="M640 768h512V576q0-106-75-181t-181-75-181 75-75 181v192zm832 96v576q0 40-28 68t-68 28H416q-40 0-68-28t-28-68V864q0-40 28-68t68-28h32V576q0-184 132-316t316-132 316 132 132 316v192h32q40 0 68 28t28 68z" />
+        </symbol>
+        <symbol id="icon-user" viewBox="0 0 1792 1792">
+          <path d="M1600 1405q0 120-73 189.5t-194 69.5H459q-121 0-194-69.5T192 1405q0-53 3.5-103.5t14-109T236 1084t43-97.5 62-81 85.5-53.5T538 832q9 0 42 21.5t74.5 48 108 48T896 971t133.5-21.5 108-48 74.5-48 42-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-320-893q0 159-112.5 271.5T896 896 624.5 783.5 512 512t112.5-271.5T896 128t271.5 112.5T1280 512z" />
+        </symbol>
+      </svg>
+    
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="https://assets-in.bmscdn.com/promotions/cms/creatives/1649681464544_webshowcase_1240x300.jpg" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="https://assets-in.bmscdn.com/promotions/cms/creatives/1649439367988_kgf5now.jpg" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="https://assets-in.bmscdn.com/promotions/cms/creatives/1643608159306_fb.jpg" class="d-block w-100" alt="...">
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="https://assets-in.bmscdn.com/promotions/cms/creatives/1649831409834_free.jpg" class="d-block w-100" alt="...">
+        </div>
+      </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      
     <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>

@@ -1,7 +1,14 @@
 import flask
-from flask import Flask, request, render_template, redirect, session
+from flask import Flask, request, render_template, redirect, session, url_for
 import sqlite3
 from flask_session import Session
+from instamojo_wrapper import Instamojo
+API_KEY = "test_79ae585bb2ff567c3f593b7cb1c"
+
+AUTH_TOKEN = "test_99fbc09589ba9a5dbfa3b451ed5"
+
+api = Instamojo(api_key=API_KEY, auth_token=AUTH_TOKEN, endpoint='https://test.instamojo.com/api/1.1/')
+
 conn = sqlite3.connect("Theatre.db", check_same_thread=False)
 cursor = conn.cursor()
 
@@ -62,7 +69,8 @@ if halls_table:
 else:
     conn.execute(''' CREATE TABLE HALL(
                             HALLID INTEGER PRIMARY KEY AUTOINCREMENT,
-                            SHOWID Integer,
+                            SHOWID FOREIGN KEY REFERENCES SHOW(SHOWID),
+                            movieName TEXT,
                             Class TEXT,
                             No_of_seats INTEGER); ''')
     print("Table has created")
@@ -140,6 +148,7 @@ def owner():
             conn.execute("INSERT INTO owners(name, area, city, phone, email, username, password )VALUES('"+getName+"','"+getArea+"','"+getCity+"','"+getPhone+"','"+getEmail+"','"+getUsername+"','"+getPassword+"')")
             print("Successfully inserted")
             conn.commit()
+            return redirect("/view")
 
         except Exception as e:
             print(e)
@@ -182,6 +191,7 @@ def delete():
             cursor = conn.cursor()
             cursor.execute("DELETE FROM owners WHERE name = '" + getName + "' ")
             conn.commit()
+
         return render_template("delete.html")
 
 @app.route("/", methods=["GET", "POST"])
@@ -358,22 +368,73 @@ def viewAllHalls():
     return render_template("viewallhalls.html", cinemas=res)
 
 
+@app.route('/ViewSeats', methods=['GET', 'POST'])
+def home1():
+    if request.method == "POST":
+        hallId = request.form["hallId"]
+        showId = request.form["showId"]
+        return redirect(url_for('getAvailableSeats', hallId=hallId, showId=showId))
+    return render_template('ViewSeats.html')
+
+
+@app.route("/getAvailableSeats", methods=["GET", "POST"])
+def seatingManagement():
+    if request.method == "POST":
+        hallId = request.form["hallId"]
+        showId = request.form["showId"]
+        print("showId : ", showId)
+        print("hallId: ", hallId)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM HALL WHERE HALLID = ? AND SHOWID = ?", (hallId, showId))
+        res = cur.fetchall()
+        cur.execute("SELECT * FROM HALL")
+        halls = cur.fetchall()
+        print(res)
+        print("***")
+        # data = (hall_class,showId)
+        # q =  "SELECT * FROM HALL"
+        # cur.execute(q,data)
+        # res = cur.fetchall()
+        # print("* res **: ", res )
+
+        totalGold = 0
+        totalStandard = 0
+
+        print("* res *", res)
+        for i in res:
+            print("** ele ***: ", i[2])
+            if i[2] == 'gold':
+                totalGold = i[3]
+            if i[2] == 'silver':
+                totalStandard = i[3]
+        # if request.method == "POST":
+        #     hallId = request.form["hallId"]
+        #     showId = request.form["showId"]
+        #     print(hallId)
+        #     print(showId)
+        #     return redirect("/getAvailableSeats?hallId=hallId&showId=showId")
+        # return render_template("ViewSeats.html")
+    return render_template("getAvailableSeats.html", goldSeats=totalGold, standardSeats=totalStandard)
+
+
 @app.route("/showsHalls", methods=["GET", "POST"])
 def arrangeHalls():
     if request.method == "POST":
+        # getMovieName = request.form["movieName"]
         getMShowId = request.form["sid"]
         getClass = request.form["class"]
         getNoOfSeats= request.form["nos"]
 
 
         print(getMShowId)
+        # print(getMovieName)
         print(getClass)
         print(getNoOfSeats)
 
 
         try:
             data = (getMShowId, getClass, getNoOfSeats)
-            insert_query = '''INSERT INTO HALL(SHOWID, Class, No_of_seats) 
+            insert_query = '''INSERT INTO HALL( SHOWID, Class, No_of_seats) 
                                     VALUES (?,?,?)'''
 
             cursor.execute(insert_query, data)
@@ -385,42 +446,111 @@ def arrangeHalls():
             print(e)
     return render_template("showsHalls.html")
 
+@app.route("/deleteHalls", methods =['GET','POST'])
+def deleteHalls():
+        if request.method == "POST":
+            getHALLID = request.form["HALLID"]
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM HALL WHERE HALLID = '" + getHALLID + "' ")
+            conn.commit()
+            return redirect("/viewallHalls")
+        return render_template("deleteHalls.html")
 
-@app.route("/getAvailableSeats", methods=["GET"])
-def seatingManagement():
-    gethallID = request.form['showID']
-    print(gethallID)
-    getticketID = request.form['ticketID']
+@app.route("/deleteMovies", methods =['GET','POST'])
+def deleteMovies():
+        if request.method == "POST":
+            getMOVIEID = request.form["MOVIEID"]
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM PICTURE WHERE MOVIEID = '" + getMOVIEID + "' ")
+            conn.commit()
+            return redirect("/viewallmovies")
+        return render_template("deleteMovies.html")
 
 
-    res = ("SELECT No_of_seats FROM halls WHERE HALLID = '" + gethallID + "'")
+# @app.route("/getAvailableSeats", methods=["GET"])
+# def seatingManagementA():
+#     if request.method == "GET":
+#         hallId = request.args.get('hallId')
+#         showId = request.args.get('showId')
+#         print("showId : ", showId)
+#         print("hallId: ", hallId)
+#         cur = conn.cursor()
+#         cur.execute("SELECT * FROM HALL WHERE HALLID = ? AND SHOWID = ?", (hallId, showId))
+#         res = cur.fetchall()
+#         cur.execute("SELECT * FROM HALL")
+#         halls = cur.fetchall()
+#         print(res)
+#         print("*****")
+#         # data = (hall_class,showId)
+#         # q =  "SELECT * FROM HALL"
+#         # cur.execute(q,data)
+#         # res = cur.fetchall()
+#         # print("*** res **: ", res )
+#
+#         totalGold = 0
+#         totalStandard = 0
+#
+#         print("*** res ***", res)
+#         for i in res:
+#             print("***** ele ****: ", i[2])
+#             if i[2] == 'gold':
+#                 totalGold = i[3]
+#             if i[2] == 'silver':
+#                 totalStandard = i[3]
+#
+#         # cur.execute("SELECT SEAT_NO FROM BOOKED_TICKETS WHERE SHOWID = " + getshowID)
+#
+#         # goldSeats = []
+#         # standardSeats = []
+#         #
+#         # for i in range(1, totalGold + 1):
+#         #     goldSeats.append([i, ''])
+#         #
+#         #     for i in range(1, totalStandard + 1):
+#         #         standardSeats.append([i, ''])
+#         #
+#         #     for i in res:
+#         #         if i[0] > 1000:
+#         #             goldSeats[i[0] % 1000 - 1][1] = 'disabled'
+#         #         else:
+#         #             standardSeats[i[0] - 1][1] = 'disabled'
+#         return render_template("seating.html", goldSeats=totalGold, standardSeats=totalStandard)
 
-    totalGold = 0
-    totalStandard = 0
 
-    for i in res:
-        if i[0] == 'gold':
-            totalGold = i[1]
-        if i[0] == 'standard':
-            totalStandard = i[1]
+@app.route("/seats", methods=["GET", "POST"])
+def seats():
+    return render_template("seating.html")
 
-    res = ("SELECT SEAT_NO FROM BOOKED_TICKETS WHERE TICKET_NO = '" + getticketID + "' " )
-    goldSeats = []
-    standardSeats = []
 
-    for i in range(1, totalGold + 1):
-        goldSeats.append([i, ''])
+@app.route("/insertBooking", methods=["GET","POST"])
+def createBooking():
+    print(request.method)
+    if request.method == "POST":
+        hallID = request.form['hallID']
+        showID = request.form['showID']
+        noOfSeats = request.form['noOfSeats']
+        seatClass = request.form['seatClass']
 
-    for i in range(1, totalStandard + 1):
-        standardSeats.append([i, ''])
+        print(hallID)
+        print(showID)
+        print(noOfSeats)
+        print(seatClass)
 
-    for i in res:
-        if i[0] > 1000:
-            goldSeats[i[0] % 1000 - 1][1] = 'disabled'
-        else:
-            standardSeats[i[0] - 1][1] = 'disabled'
+        cur = conn.cursor()
+        cur.execute("SELECT No_of_seats FROM HALL WHERE HALLID = ? AND SHOWID = ? AND Class = ?", (hallID, showID, seatClass))
+        res = cur.fetchall()
+        seats = res[0]
+        print("* res * : ", res)
+        remaining_seats = seats[0] - int(noOfSeats)
 
-    return render_template('seating.html', goldSeats=goldSeats, standardSeats=standardSeats)
+        cur = conn.cursor()
+        cur.execute("UPDATE HALL SET No_of_seats = ?  WHERE  HALLID = ? AND SHOWID = ? AND Class = ? ;",(remaining_seats,hallID, showID, seatClass))
+        conn.commit()
+        return redirect("/pay")
+
+
+    return render_template("insertBooking.html")
+
 
 ################################################################################################################################################
 
@@ -450,7 +580,7 @@ def userEntry():
             conn.execute("INSERT INTO users(mname, maddress, mphone, memail, musername, mpassword )VALUES('"+getName+"','"+getAddress+"','"+getPhone+"','"+getEmail+"','"+getUsername+"','"+getPassword+"')")
             print("Successfully inserted")
             conn.commit()
-            return redirect("/userlogin")
+            return redirect("/userdashboard")
 
         except Exception as e:
             print(e)
@@ -488,6 +618,69 @@ def moviesearch():
         result = cursor.fetchall()
         return render_template("moviesearch.html", movies=result)
     return render_template("msearch.html")
+
+
+@app.route("/insertBooking", methods=["GET","POST"])
+def createBookingUser():
+    print(request.method)
+    if request.method == "POST":
+        hallID = request.form.get('hallID')
+        showID = request.form['showID']
+        noOfSeats = request.form['noOfSeats']
+        seatClass = request.form['seatClass']
+
+        print(hallID)
+        print(showID)
+        print(noOfSeats)
+        print(seatClass)
+
+        cur = conn.cursor()
+        cur.execute("SELECT No_of_seats FROM HALL WHERE HALLID = ? AND SHOWID = ? AND Class = ?", (hallID, showID, seatClass))
+        res = cur.fetchall()
+        print("** res **: ", res)
+        seats = res[0]
+        remaining_seats = seats[0] - int(noOfSeats)
+
+        cur = conn.cursor()
+        cur.execute("UPDATE HALL SET No_of_seats = ?  WHERE  HALLID = ? AND SHOWID = ? AND Class = ? ;",(remaining_seats,hallID, showID, seatClass))
+        conn.commit()
+        return redirect("payment.html")
+    return render_template("insertBooking.html")
+
+
+@app.route('/pay')
+def homePay():
+    return render_template('payment.html')
+
+
+@app.route('/success')
+def success():
+    return render_template('success.html')
+
+
+@app.route('/pay', methods=['POST', 'GET'])
+def pay():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        seatClass = request.form.get('seatClass')
+        email = request.form.get('email')
+        amount = request.form.get('amount')
+
+
+        response = api.payment_request_create(
+            amount=amount,
+            purpose=seatClass,
+            buyer_name=name,
+            send_email=True,
+            email=email,
+            redirect_url="http://localhost:5000/success"
+        )
+
+        return redirect(response['payment_request']['longurl'])
+
+    else:
+
+        return redirect('/')
 
 
 if(__name__) == "__main__":

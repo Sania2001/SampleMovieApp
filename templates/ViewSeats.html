@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+\
+
+    <h3
+
+    style="text-align: center; margin-top:1% ; color: rgb(53, 46, 46);">View Seating Management </h3>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"></div>
+            <form action="getAvailableSeats" method="post">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>Hall Id </td>
+                        <td><input name="hallId" type="number" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Show Id </td>
+                        <td><input name="showId" type="number" class="form-control"></td>
+                    </tr>
+
+
+                        <td></td>
+                        <input class="btn btn-outline-dark" type="submit" value="View">
+                    </tr>
+
+                </table>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

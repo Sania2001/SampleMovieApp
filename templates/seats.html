@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzjwGvJs7EXM7CqrEGt6J6Yts2sChRQZSP4A&usqp=CAU');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-size: 100% 100%;
+  }
+  </style>
+
+    <h3
+
+    style="text-align: center; margin-top:1% ; color: white;">view management </h3>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12"></div>
+            <form action="/seats" method="get">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>Hall Id </td>
+                        <td><input name="hallId" type="number" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Show Id </td>
+                        <td><input name="showId" type="number" class="form-control"></td>
+                    </tr>
+
+
+                        <td></td>
+                        <td><button class="btn btn-success" type="submit">View Seating Management</button></td>
+                    </tr>
+
+                </table>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
